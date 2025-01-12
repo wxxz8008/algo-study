@@ -1,0 +1,42 @@
+'''
+n * n (n = 2**k) -> k = 7
+
+분할정복 = divide and conquer
+
+새로운 x, y를 같이 인자로 넘겨야 함
+-> 그래야 해당 영역이 모두 1로 이루어졌는지 파악할 수 있음
+'''
+white, blue = 0, 0
+n = int(input())
+graph = []
+for _ in range(n):
+    graph.append(list(map(int, input().split())))
+
+# dac((x1, y1), (x2, y2)), dac(min, max) 이 둘 중 뭐가 맞을까
+# (x, x), (x, x + gap), (x + gap, x), (x + gap, x + gap)
+def dac(x, y, gap): 
+    global white, blue
+    target = graph[x][y] # 기준이 되는 색깔. 이와 다르면 안됨
+    for i in range(x, x + gap):
+        for j in range(y, y + gap):
+            if graph[i][j] != target:
+                dac(x, y, gap // 2)
+                dac(x + gap // 2, y, gap // 2)
+                dac(x, y + gap // 2, gap // 2)
+                dac(x + gap // 2, y + gap // 2, gap // 2)
+                return
+    # 여기까지 통과하면 같은 색으로 구성된 정사각형이라는 뜻
+    if target == 0: # 하얀색
+        white += 1
+    else:
+        blue += 1
+
+dac(0, 0, n)
+print(white)
+print(blue)
+
+'''
+# review
+재귀를 늘 어려워한다.. 오늘도 정답 참고
+재귀, 백트래킹, 분할정복, dfs 등 많이 풀어보자
+'''
